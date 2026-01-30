@@ -1,9 +1,5 @@
-require("dotenv").config();
 const { Sequelize } = require("sequelize");
-const dbConfig = require("./database");
-
-const env = process.env.NODE_ENV || "development";
-const config = dbConfig[env];
+const config = require("./database.js").development;
 
 const sequelize = new Sequelize(
   config.database,
@@ -12,8 +8,7 @@ const sequelize = new Sequelize(
   {
     host: config.host,
     dialect: config.dialect,
-  
-  }
+  },
 );
 
-module.exports = sequelize;
+module.exports = { sequelize };
