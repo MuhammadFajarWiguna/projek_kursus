@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const routerDaftar = require("./pendaftaran/route.js")
 
 
 const app = express();
@@ -8,6 +9,7 @@ const HOST = process.env.APP_HOST || "127.0.0.1";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/daftar/",routerDaftar)
 
 
 app.listen(PORT, () => {
