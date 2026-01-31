@@ -1,29 +1,34 @@
 const express = require("express");
-const { registerUser, loginUser } = require("./controller.js");
-const { authMiddleware } = require("./authMiddleware.js");
-const { roleMiddleware } = require("./role.js");
+const {
+  registerUser,
+  loginUser,
+  mentorDashboard,
+  siswaDashboard,
+  updateUser,
+  deleteUser,
+} = require("./controller");
+
+const { authMiddleware } = require("../middlewares/authMiddleware");
+const { roleMiddleware } = require("../middlewares/role");
+const uploadUser = require("../multer/uploadUser");
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
-router.get(
-  "/mentor-dashboard",
-  authMiddleware,
-  roleMiddleware(["mentor"]),
-  (req, res) => {
-    res.json({ message: "Welcome Mentor!", user: req.user });
-  },
+router.use(authMiddleware);
+
+router.get("/mentor", roleMiddleware(["mentor"]), mentorDashboard);
+router.get("/siswa", roleMiddleware(["siswa"]), siswaDashboard);
+
+router.patch(
+  "/users/:id",
+  roleMiddleware(["mentor", "siswa"]),
+  uploadUser.single("profil"),
+  updateUser,
 );
 
-router.get(
-  "/siswa-dashboard",
-  authMiddleware,
-  roleMiddleware(["siswa"]),
-  (req, res) => {
-    res.json({ message: "Welcome Siswa!", user: req.user });
-  },
-);
+router.delete("/users/:id", roleMiddleware(["mentor"]), deleteUser);
 
 module.exports = router;

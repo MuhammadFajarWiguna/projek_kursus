@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
       },
 
-      userId: {
+      mentor_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "user",
