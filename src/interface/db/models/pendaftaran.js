@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Pendaftaran extends Model {
     /**
@@ -10,11 +8,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Pendaftaran.belongsTo(models.User, {
+        foreignKey: "siswa_id",
+        as: "user",
+      });
+      Pendaftaran.belongsTo(models.Kursus, {
+        foreignKey: "kursusId",
+        as: "kursus",
+      });
     }
   }
-  Pendaftaran.init({
-    id: {
+  Pendaftaran.init(
+    {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -24,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
       },
 
-      userId: {
+      siswa_id: {
         type: DataTypes.INTEGER,
         references: {
           model: "user",
@@ -43,10 +49,12 @@ module.exports = (sequelize, DataTypes) => {
       status_pembayaran: {
         type: DataTypes.ENUM("pending", "lunas", "cicil"),
       },
-  }, {
-    sequelize,
-    modelName: 'Pendaftaran',
-    tableName: 'pendaftaran',
-  });
+    },
+    {
+      sequelize,
+      modelName: "Pendaftaran",
+      tableName: "pendaftaran",
+    },
+  );
   return Pendaftaran;
 };

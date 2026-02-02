@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
 
-      userId: {
+      siswa_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "user",
