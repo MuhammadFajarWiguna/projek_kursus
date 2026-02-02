@@ -8,27 +8,37 @@ const {
   deleteUser,
 } = require("./controller");
 
-const { authMiddleware } = require("../middlewares/authMiddleware");
-const { roleMiddleware } = require("../middlewares/role");
-const uploadUser = require("../multer/uploadUser");
+const { authMiddleware } = require("../src/middlewares/authMiddleware.js");
+const { roleMiddleware } = require("../src/middlewares/role.js");
+const uploadUser = require("../src/multer/uploadUser.js");
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
-router.use(authMiddleware);
+router.get(
+  "/mentor",
+  authMiddleware,
+  roleMiddleware(["mentor"]),
+  mentorDashboard,
+);
 
-router.get("/mentor", roleMiddleware(["mentor"]), mentorDashboard);
-router.get("/siswa", roleMiddleware(["siswa"]), siswaDashboard);
+router.get("/siswa", authMiddleware, roleMiddleware(["siswa"]), siswaDashboard);
 
 router.patch(
-  "/users/:id",
+  "/users/update/:id",
+  authMiddleware,
   roleMiddleware(["mentor", "siswa"]),
   uploadUser.single("profil"),
   updateUser,
 );
 
-router.delete("/users/:id", roleMiddleware(["mentor"]), deleteUser);
+router.delete(
+  "/users/delete/:id",
+  authMiddleware,
+  roleMiddleware(["mentor"]),
+  deleteUser,
+);
 
 module.exports = router;

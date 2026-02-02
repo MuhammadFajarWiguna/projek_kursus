@@ -9,7 +9,7 @@ const HOST = process.env.APP_HOST || "127.0.0.1";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 
 app.listen(PORT, () => {
   console.log(`Server berjalan di ${HOST}: ${PORT}`);
