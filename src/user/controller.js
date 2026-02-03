@@ -5,6 +5,7 @@ const {
   tampilUser,
   ubahUser,
   hapusUser,
+  cariByRole,
 } = require("./service.js");
 
 const bcrypt = require("bcryptjs");
@@ -14,17 +15,16 @@ const path = require("path");
 
 const registerUser = async (req, res) => {
   try {
-    const { nama_user, password, email, alamat, no_hp, role} = req.body;
+    const { nama_user, password, email, alamat, no_hp, role } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await buatUser({
       nama_user,
       password: hashedPassword,
       email,
       alamat,
       no_hp,
-      role
+      role,
     });
 
     res.status(201).json({
@@ -67,6 +67,42 @@ const loginUser = async (req, res) => {
   }
 };
 
+const createUser = async (req, res) => {
+  try {
+    const { nama_user, password, email, alamat, no_hp, role } = req.body;
+
+    const profile = req.file ? req.file.filename : null;
+
+    const user = await buatUser({
+      nama_user,
+      password,
+      email,
+      alamat,
+      no_hp,
+      role,
+      profile,
+    });
+
+    return res.status(201).json({
+      message: "User berhasil dibuat",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getByRole = async (req, res) => {
+  try {
+    const role = req.user.role;
+    const data = await cariByRole(role);
+
+    return res.status(200).json({ message: "Data berdasarkan role", data });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getAll = async (req, res) => {
   try {
     const data = await tampilUser();
@@ -96,25 +132,24 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
-    let profil = userLama.profil;
+    let profile = userLama.profile;
 
     if (req.file) {
-      profil = req.file.filename;
-
-      if (userLama.profil) {
-        const oldPath = path.join(__dirname, "../uploads", userLama.profil);
-
+      if (profile) {
+        const oldPath = path.join(__dirname, "../uploads", profile);
         if (fs.existsSync(oldPath)) {
           fs.unlinkSync(oldPath);
         }
       }
+
+      profile = req.file.filename;
     }
 
-    const body = { nama_user, email, alamat, no_hp, profil };
-    await ubahUser(id, body);
-    res.json({ message: "User berhasil diupdate" });
+    await ubahUser(id, { nama_user, email, alamat, no_hp, profile });
+
+    return res.json({ message: "User berhasil diupdate" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -127,9 +162,8 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
-    if (user.profil) {
-      const filePath = path.join(__dirname, "../uploads", user.profil);
-
+    if (user.profile) {
+      const filePath = path.join(__dirname, "../uploads", user.profile);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
@@ -137,9 +171,9 @@ const deleteUser = async (req, res) => {
 
     await hapusUser(id);
 
-    res.json({ message: "User berhasil dihapus" });
+    return res.json({ message: "User berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -166,4 +200,6 @@ module.exports = {
   getById,
   updateUser,
   deleteUser,
+  getByRole,
+  createUser,
 };

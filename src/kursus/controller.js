@@ -1,19 +1,33 @@
-const { buatKursus, cariKursus, cariIdKursus, tampilKursus, ubahKursus, hapusKursus } = require("./service.js");
+const {
+  buatKursus,
+  cariIdKursus,
+  tampilKursus,
+  ubahKursus,
+  hapusKursus,
+} = require("./service.js");
 
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 
 const createKursus = async (req, res) => {
   let thumbnail = null;
   try {
-    const { nama_kursus, mentor_id, judul, deskripsi, harga, status, tgl_mulai, tgl_selesai } = req.body;
+    const {
+      nama_kursus,
+      mentor_id,
+      judul,
+      deskripsi,
+      harga,
+      status,
+      tgl_mulai,
+      tgl_selesai,
+    } = req.body;
 
     if (!nama_kursus || !status) {
-      return res.status(400).json({ message: "Nama kursus dan status wajib diisi" });
+      return res
+        .status(400)
+        .json({ message: "Nama kursus dan status wajib diisi" });
     }
-
 
     if (req.file) {
       thumbnail = req.file.filename;
@@ -64,7 +78,15 @@ const getById = async (req, res) => {
 const updateKursus = async (req, res) => {
   try {
     const id = req.params.id;
-    const { nama_Kursus, judul, deskripsi, harga, status, tgl_mulai, tgl_selesai } = req.body;
+    const {
+      nama_kursus,
+      judul,
+      deskripsi,
+      harga,
+      status,
+      tgl_mulai,
+      tgl_selesai,
+    } = req.body;
 
     const kursusLama = await cariIdKursus(id);
     if (!kursusLama) {
@@ -77,7 +99,11 @@ const updateKursus = async (req, res) => {
       thumbnail = req.file.filename;
 
       if (kursusLama.thumbnail) {
-        const oldPath = path.join(__dirname, "../uploads", kursusLama.thumbnail);
+        const oldPath = path.join(
+          __dirname,
+          "../uploads",
+          kursusLama.thumbnail,
+        );
 
         if (fs.existsSync(oldPath)) {
           fs.unlinkSync(oldPath);
@@ -86,7 +112,7 @@ const updateKursus = async (req, res) => {
     }
 
     const body = {
-      nama_Kursus,
+      nama_kursus,
       judul,
       deskripsi,
       harga,
@@ -112,7 +138,11 @@ const deleteKursus = async (req, res) => {
     }
 
     if (kursus.thumbnail) {
-      const filePath = path.join(__dirname, "../src/uploads", kursus.thumbnail);
+      const filePath = path.join(
+        process.cwd(),
+        "/src/uploads",
+        kursus.thumbnail,
+      );
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
@@ -121,7 +151,7 @@ const deleteKursus = async (req, res) => {
 
     await hapusKursus(id);
 
-    res.json({ message: "Kursus berhasil dihapus" });
+    res.status(201).json({ message: "Kursus berhasil dihapus" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

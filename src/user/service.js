@@ -28,6 +28,10 @@ const ubahUser = async (id, body) => {
 const hapusUser = async (id) => {
   return await User.destroy({ where: { id } });
 };
+
+const cariByRole = async (role) => {
+  return await User.findAll({ where: { role } });
+};
 module.exports = {
   buatUser,
   cariUser,
@@ -35,4 +39,5 @@ module.exports = {
   tampilUser,
   ubahUser,
   hapusUser,
+  cariByRole,
 };

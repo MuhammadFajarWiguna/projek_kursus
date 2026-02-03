@@ -33,7 +33,7 @@ module.exports = {
         allowNull: false,
       },
 
-      profil: {
+      profile: {
         type: Sequelize.STRING,
       },
 

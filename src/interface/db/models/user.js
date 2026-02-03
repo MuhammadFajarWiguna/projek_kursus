@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
 
-      profil: {
+      profile: {
         type: DataTypes.STRING,
       },
 
