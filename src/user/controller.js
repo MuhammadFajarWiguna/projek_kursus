@@ -14,7 +14,7 @@ const path = require("path");
 
 const registerUser = async (req, res) => {
   try {
-    const { nama_user, password, email, alamat, no_hp } = req.body;
+    const { nama_user, password, email, alamat, no_hp, role} = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
       email,
       alamat,
       no_hp,
-      role: "siswa",
+      role
     });
 
     res.status(201).json({
@@ -102,7 +102,7 @@ const updateUser = async (req, res) => {
       profil = req.file.filename;
 
       if (userLama.profil) {
-        const oldPath = path.join(__dirname, "../src/uploads", userLama.profil);
+        const oldPath = path.join(__dirname, "../uploads", userLama.profil);
 
         if (fs.existsSync(oldPath)) {
           fs.unlinkSync(oldPath);
@@ -128,7 +128,7 @@ const deleteUser = async (req, res) => {
     }
 
     if (user.profil) {
-      const filePath = path.join(__dirname, "../src/uploads", user.profil);
+      const filePath = path.join(__dirname, "../uploads", user.profil);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);

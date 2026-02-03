@@ -6,15 +6,15 @@ const {
   siswaDashboard,
   updateUser,
   deleteUser,
-} = require("./controller");
+} = require("./controller.js");
 
-const { authMiddleware } = require("../src/middlewares/authMiddleware.js");
-const { roleMiddleware } = require("../src/middlewares/role.js");
-const uploadUser = require("../src/multer/uploadUser.js");
+const { authMiddleware } = require("../middlewares/authMiddleware.js");
+const { roleMiddleware } = require("../middlewares/role.js");
+const uploadUser = require("../multer/uploadUser.js");
 
 const router = express.Router();
 
-router.post("/register", registerUser);
+router.post("/register",registerUser);
 router.post("/login", loginUser);
 
 router.get(

@@ -1,4 +1,4 @@
-const db = require("../src/interface/db/models/index.js");
+const db = require("../interface/db/models/index.js");
 const { User } = db;
 
 const buatUser = async (data) => {
