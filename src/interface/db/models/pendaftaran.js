@@ -1,20 +1,22 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Pendaftaran extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      Pendaftaran.belongsTo(models.Kursus, {
+        foreignKey: "kursus_id",
+        as: "kursus",
+      });
+
+      Pendaftaran.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
     }
   }
-  Pendaftaran.init({
-    id: {
+  Pendaftaran.init(
+    {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -43,10 +45,12 @@ module.exports = (sequelize, DataTypes) => {
       status_pembayaran: {
         type: DataTypes.ENUM("pending", "lunas", "cicil"),
       },
-  }, {
-    sequelize,
-    modelName: 'Pendaftaran',
-    tableName: 'pendaftaran',
-  });
+    },
+    {
+      sequelize,
+      modelName: "Pendaftaran",
+      tableName: "pendaftaran",
+    },
+  );
   return Pendaftaran;
 };
