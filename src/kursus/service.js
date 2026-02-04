@@ -1,5 +1,5 @@
 const db = require("../interface/db/models/index.js");
-const { Kursus } = db;
+const { Kursus, User } = db;
 
 const buatKursus = async (data) => {
   return await Kursus.create(data);
@@ -10,7 +10,11 @@ const cariIdKursus = async (id) => {
 };
 
 const tampilKursus = async () => {
-  return await Kursus.findAll();
+  return await Kursus.findAll({
+    include: [
+      { model: User, as: "mentor", attributes: ["id", "nama_user", "email"] },
+    ],
+  });
 };
 
 const ubahKursus = async (id, body) => {

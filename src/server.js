@@ -4,17 +4,19 @@ const path = require("path");
 
 const userRoute = require("./user/router.js");
 const kursusRoute = require("./kursus/router.js");
+const pendaftaranRoute = require("./pendaftaran/router.js");
 
 const app = express();
 const PORT = process.env.APP_PORT || 3000;
 const HOST = process.env.APP_HOST || "127.0.0.1";
 
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/users", userRoute);
 app.use("/api/kursus", kursusRoute);
+app.use("/api/pendaftaran", pendaftaranRoute);
 
 app.listen(PORT, () => {
   console.log(`Server berjalan di ${HOST}: ${PORT}`);

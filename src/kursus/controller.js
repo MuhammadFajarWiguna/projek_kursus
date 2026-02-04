@@ -80,6 +80,7 @@ const updateKursus = async (req, res) => {
     const id = req.params.id;
     const {
       nama_kursus,
+      mentor_id,
       judul,
       deskripsi,
       harga,
@@ -113,6 +114,7 @@ const updateKursus = async (req, res) => {
 
     const body = {
       nama_kursus,
+      mentor_id,
       judul,
       deskripsi,
       harga,

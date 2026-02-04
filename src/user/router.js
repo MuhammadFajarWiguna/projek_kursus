@@ -10,6 +10,8 @@ const {
   createUser,
 } = require("./controller.js");
 
+const { cekId, cekTambahUser, cekLogin } = require("./validate.js");
+
 const { authMiddleware } = require("../middlewares/authMiddleware.js");
 const { roleMiddleware } = require("../middlewares/role.js");
 const uploadUser = require("../multer/uploadUser.js");
@@ -17,8 +19,8 @@ const uploadUser = require("../multer/uploadUser.js");
 const router = express.Router();
 
 router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.post("/tambah", uploadUser.single("profile"), createUser);
+router.post("/login", cekLogin, loginUser);
+router.post("/tambah", uploadUser.single("profile"), cekTambahUser, createUser);
 
 router.get(
   "/mentor",
@@ -38,6 +40,7 @@ router.get("/siswa", authMiddleware, roleMiddleware(["siswa"]), siswaDashboard);
 
 router.patch(
   "/update/:id",
+  cekId,
   authMiddleware,
   roleMiddleware(["mentor", "siswa"]),
   uploadUser.single("profile"),
@@ -46,6 +49,7 @@ router.patch(
 
 router.delete(
   "/delete/:id",
+  cekId,
   authMiddleware,
   roleMiddleware(["mentor"]),
   deleteUser,
